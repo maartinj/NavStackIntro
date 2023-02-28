@@ -9,27 +9,29 @@
 
 import SwiftUI
 
+// Film: https://www.youtube.com/watch?v=6-OeaFfDXXw&ab_channel=StewartLynch
+
 struct IntroView: View {
     let items = ["🍎", "🍐", "🍋", "🍑", "🍌", "🍉", "🍇", "🍒", "🫐", "🍓"]
-    @State private var isShowingDetailView = false
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 List(items, id: \.self) { fruit in
-                    NavigationLink("I choose \(fruit)") {
-                        ChosenView(item: fruit)
-                    }
+                    NavigationLink("I choose \(fruit)", value: fruit)
                 }
-                NavigationLink(destination: ChosenView(item: items[7]),
-                               isActive: $isShowingDetailView) { EmptyView() }
-                
-                Button("Tap to show preferred") {
-                    isShowingDetailView = true
+                HStack {
+                    NavigationLink("Tap to show preferred", value: items[7])
+                    NavigationLink(value: "😀") {
+                        Text("Other")
+                    }
                 }
                 .buttonStyle(.borderedProminent)
             }
             .padding()
             .navigationTitle("Fruit of the Day")
+            .navigationDestination(for: String.self) { stringValue in
+                ChosenView(item: stringValue)
+            }
         }
     }
 }
